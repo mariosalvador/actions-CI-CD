@@ -1,0 +1,10 @@
+.git
+.github
+.dockerignore
+node_modules
+dist
+coverage
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+*.log
