@@ -8,13 +8,13 @@ on:
 
 jobs:
   build:
-    name: "Build and Test - Node ${{ matrix.node }}"
+    name: "Build and Test - Node"
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [20, 22, 24]
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     node: [20, 22, 24]
 
     steps:
       - name: Checkout
@@ -26,7 +26,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: ${{ matrix.node }}
+          # node-version: ${{ matrix.node }}
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
