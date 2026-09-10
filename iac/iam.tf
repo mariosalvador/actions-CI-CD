@@ -71,6 +71,7 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
         Sid    = "ECRAppPermissions"
         Effect = "Allow"
         Action = [
+          "sts:AssumeRoleWithWebIdentity",
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
