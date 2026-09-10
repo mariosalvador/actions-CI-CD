@@ -25,20 +25,13 @@ resource "aws_iam_role" "ecr-role" {
         Action = "sts:AssumeRoleWithWebIdentity"
 
         Principal = {
-          Federated = "arn:aws:iam::652656942111:oidc-provider/token.actions.githubusercontent.com"
+          Federated = aws_iam_openid_connect_provider.openid-connect-git.arn
         }
 
         Condition = {
           StringEquals = {
-            "token.actions.githubusercontent.com:aud" = [
-              "sts.amazonaws.com"
-            ]
-          }
-
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = [
-              "repo:mariosalvador/actions-CI-CD:*"
-            ]
+            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:sub" = "repo:mariosalvador/actions-CI-CD:ref:refs/heads/main"
           }
         }
       }
@@ -61,10 +54,16 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
 
     Statement = [
       {
-        Sid = "ECRAppPermissions"
-
+        Sid    = "ECRGetAuthToken"
         Effect = "Allow"
-
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ECRAppPermissions"
+        Effect = "Allow"
         Action = [
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
@@ -72,11 +71,9 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
           "ecr:PutImage",
           "ecr:InitiateLayerUpload",
           "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload",
-          "ecr:GetAuthorizationToken"
+          "ecr:CompleteLayerUpload"
         ]
-
-        Resource = "*"
+        Resource = aws_ecr_repository.ecr-reposi.arn
       }
     ]
   })
