@@ -63,6 +63,7 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
         Sid    = "ECRGetAuthToken"
         Effect = "Allow"
         Action = [
+          "sts:AssumeRoleWithWebIdentity",
           "ecr:GetAuthorizationToken"
         ]
         Resource = "*"
