@@ -37,7 +37,7 @@ resource "aws_iam_role" "ecr-role" {
 
           StringLike = {
             "token.actions.githubusercontent.com:sub" = [
-              "repo:mariosalvador/actions-CI-CD:ref:refs/heads/main"
+              "repo:mariosalvador/actions-CI-CD:*"
             ]
           }
         }
