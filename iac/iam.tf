@@ -31,8 +31,11 @@ resource "aws_iam_role" "ecr-role" {
         },
         "Action" : "sts:AssumeRoleWithWebIdentity",
         "Condition" : {
+          "StringEquals" : {
+            "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
+          },
           "StringLike" : {
-            "token.actions.githubusercontent.com:sub" : "repo:mariosalvador/actions-CI-CD:*"
+            "token.actions.githubusercontent.com:sub" : "repo:mariosalvador@128391174/actions-CI-CD@1360730751:*"
           }
         }
       }
