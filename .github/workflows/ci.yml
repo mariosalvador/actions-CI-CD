@@ -52,12 +52,6 @@ jobs:
           echo "Ref name: $GITHUB_REF_NAME"
           echo "Actor: $GITHUB_ACTOR"
 
-      - name: Debug OIDC token
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: github/actions-oidc-debugger@main
-        with:
-          audience: sts.amazonaws.com
-
       - name: Configure AWS credentials
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v6.2.4

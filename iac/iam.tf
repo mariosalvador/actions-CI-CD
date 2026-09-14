@@ -50,9 +50,8 @@ resource "aws_iam_role" "ecr-role" {
 }
 
 
-resource "aws_iam_role_policy" "ecr-app-permissions" {
+resource "aws_iam_role_policy" "ecr_app_permissions" {
   name = "ecr-app-permissions"
-
   role = aws_iam_role.ecr-role.id
 
   policy = jsonencode({
@@ -60,19 +59,20 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
 
     Statement = [
       {
-        Sid    = "ECRGetAuthToken"
+        Sid    = "ECRGetAuthorizationToken"
         Effect = "Allow"
+
         Action = [
-          "sts:AssumeRoleWithWebIdentity",
           "ecr:GetAuthorizationToken"
         ]
+
         Resource = "*"
       },
       {
-        Sid    = "ECRAppPermissions"
+        Sid    = "ECRRepositoryPermissions"
         Effect = "Allow"
+
         Action = [
-          "sts:AssumeRoleWithWebIdentity",
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
@@ -81,6 +81,7 @@ resource "aws_iam_role_policy" "ecr-app-permissions" {
           "ecr:UploadLayerPart",
           "ecr:CompleteLayerUpload"
         ]
+
         Resource = aws_ecr_repository.ecr-reposi.arn
       }
     ]
