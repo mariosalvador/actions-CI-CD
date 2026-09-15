@@ -72,8 +72,8 @@ jobs:
           REGISTRY: ${{steps.login-ecr.outputs.registry}}
           TAG: ${{steps.generate_tag.outputs.sha}}
         run: |
-          docker build -t ${{ env.REGISTRY }}/ecr-repository:${{ TAG }} .
-          docker push ${{ env.REGISTRY }}/ecr-repository:${{ TAG }}
+          docker build -t $REGISTRY/ecr-repository:$TAG .
+          docker push $REGISTRY/ecr-repository:$TAG
 
       # - name: Login into the container registry
       #   uses: docker/login-action@v4
