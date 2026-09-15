@@ -47,6 +47,33 @@ resource "aws_iam_role" "ecr-role" {
   }
 }
 
+resource "aws_iam_role" "app-runner-role" {
+  name = "app-runner-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          Service = "build.apprunner.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
+
+  tags = {
+    AppRunner = "True"
+  }
+}
 
 resource "aws_iam_role_policy" "ecr_app_permissions" {
   name = "ecr-app-permissions"
@@ -56,6 +83,21 @@ resource "aws_iam_role_policy" "ecr_app_permissions" {
     Version = "2012-10-17"
 
     Statement = [
+      {
+        Sid      = "apprunner"
+        Effect   = "Allow"
+        Action   = "apprunner:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "apprunner2"
+        Effect = "Allow"
+        Action = [
+          "iam:PassRole",
+          "iam:CreateServiceLinkedRole"
+        ]
+        Resource = "*"
+      },
       {
         Sid    = "ECRGetAuthorizationToken"
         Effect = "Allow"
