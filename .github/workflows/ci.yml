@@ -67,6 +67,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Build docker image
+        env:
+          REGISTRY: ${{steps.login-ecr.outputs.registry}}
+          TAG: ${{steps.generate_tag.outputs.sha}}
+        run: |
+          docker build -t ${{ env.REGISTRY }}/ecr-repository:${{ TAG }} .
+          docker push ${{ env.REGISTRY }}/ecr-repository:${{ TAG }}
+
       # - name: Login into the container registry
       #   uses: docker/login-action@v4
       #   with:
