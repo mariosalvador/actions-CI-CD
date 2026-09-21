@@ -51,7 +51,9 @@ jobs:
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
 
       - name: Configure AWS credentials
+        id: aws-credentials
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::652656942111:role/ecr-role
@@ -59,11 +61,11 @@ jobs:
           audience: sts.amazonaws.com
 
       - name: Verify AWS identity
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.aws-credentials.outcome == 'success'
         run: aws sts get-caller-identity
 
       - name: Login to Amazon ECR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.aws-credentials.outcome == 'success'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
